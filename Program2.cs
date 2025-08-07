@@ -25,7 +25,7 @@ namespace HotelApp
 
                 // Input: Name
                 Console.Write("Enter Customer Name: ");
-                customer.Name = Console.ReadLine();
+                customer.Name = Console.ReadLine().Trim();
 
                 // Input: Number of nights with validation
                 int nights;
@@ -40,10 +40,18 @@ namespace HotelApp
                     Console.WriteLine("Invalid input. Nights must be between 1 and 20.");
                 }
 
-                // Input: Room service (yes/no) converted to boolean
-                Console.Write("Room service required? (yes/no): ");
-                string roomServiceInput = Console.ReadLine().ToLower();
-                customer.RoomService = roomServiceInput == "yes";
+                // Input: Room service with validation
+                while (true)
+                {
+                    Console.Write("Room service required? (yes/no): ");
+                    string roomServiceInput = Console.ReadLine().Trim().ToLower();
+                    if (roomServiceInput == "yes" || roomServiceInput == "no")
+                    {
+                        customer.RoomService = roomServiceInput == "yes";
+                        break;
+                    }
+                    Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
+                }
 
                 // Calculate cost
                 customer.Cost = CalculateCost(customer.Nights, customer.RoomService);
@@ -62,10 +70,11 @@ namespace HotelApp
 
             // Display summary
             Console.WriteLine("\n\t\t\tSummary of Reservations");
-            Console.WriteLine("Name\t\tNights\t\tRoom Service\t\tCharge ($)");
+            Console.WriteLine("{0,-20}{1,-10}{2,-15}{3,10}", "Name", "Nights", "Room Service", "Charge ($)");
             foreach (var c in customers)
             {
-                Console.WriteLine($"{c.Name}\t\t{c.Nights}\t\t{(c.RoomService ? "Yes" : "No")}\t\t\t{c.Cost:F2}");
+                Console.WriteLine("{0,-20}{1,-10}{2,-15}{3,10:F2}",
+                    c.Name, c.Nights, c.RoomService ? "Yes" : "No", c.Cost);
             }
 
             // Find max and min spenders
